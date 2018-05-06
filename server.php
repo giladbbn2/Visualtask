@@ -13,7 +13,7 @@ $options = array();
 
 if (isset($_POST["options"])){
 
-	// load mysql db interface (mysqli) - it is possible to use the same interface and put a different db connector here
+	// load mysql db interface (mysqli) - currently visualtask supports only mysql query syntax
 
 	include_once VTG_SERVER_LIBS . DIRECTORY_SEPARATOR . "mysql.php";
 
