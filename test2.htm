@@ -37,13 +37,33 @@
 				q1: {
 					type: "res1",	// res1 is db
 					select: [{
-						fieldName: "username"
+						function: "date",
+                        fieldName: "insert_datetime",
+                        alias: "t"
 					},{
+						function: "count",
 						fieldName: "id"
-					},{
-                        fieldName: "insert_datetime"
 					}],
-					from: "main.users"
+					from: "main.users",
+					where: [{
+						fieldName: "id",
+						fieldType: "num",
+						op: ">",
+						val: 10
+					}],
+					groupBy: [{
+						function: "date",
+						fieldName: "insert_datetime"
+					}],
+					orderBy: [{
+						function: "date",
+						fieldName: "insert_datetime",
+						dir: "desc"
+					}],
+					limit: {
+						offset: 5,
+						size: 10
+					}
 				}
 			},
 			graphs: {
@@ -52,17 +72,15 @@
                 	lib: "visualtaskgrid",
                 	queryId: "q1",
                 	fields: [{
-                		fieldName: "username",
-                		fieldType: "string"
+                		fieldName: "t",
+                		fieldType: "datetime"
                 	},{
                 		fieldName: "id",
-                		fieldType: "num"
-                	},{
-                		fieldName: "insert_datetime",
-                		fieldType: "datetime"
+                		fieldType: "num",
+                		isSortable: false
                 	}],
 					header: {
-						values: ["Username", "User ID", "Insert Datetime"]
+						values: ["Insert Datetime", "User ID"]
 					},
 					isShowFiltering: true,
 					isShowAdvancedBox: true,
