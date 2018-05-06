@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+		<meta content="utf-8"/>    
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		<title>Test preset</title>
+
+		<!-- bootstrap 4 -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+
+		<!-- visual task grid -->
+		<link rel="stylesheet" href="/css/grid.visualtask.css" />
+
+	</head>
+	<body>
+
+		<div id="graph1"></div>
+		<div id="vtgerror"></div>
+
+		<script>
+
+
+		var task = {
+			taskId: "task1",
+			tplId: "tpl1",
+			queries: {
+				q1: {
+					type: "res1",	// res1 is db
+					select: [{
+						fieldName: "username"
+					},{
+						fieldName: "id"
+					},{
+                        fieldName: "insert_datetime"
+					}],
+					from: "main.users"
+				}
+			},
+			graphs: {
+                g1: {
+                	HTMLElementId: "graph1",
+                	lib: "visualtaskgrid",
+                	queryId: "q1",
+                	fields: [{
+                		fieldName: "username",
+                		fieldType: "string"
+                	},{
+                		fieldName: "id",
+                		fieldType: "num"
+                	},{
+                		fieldName: "insert_datetime",
+                		fieldType: "datetime"
+                	}],
+					header: {
+						values: ["Username", "User ID", "Insert Datetime"]
+					},
+					isShowFiltering: true,
+					isShowAdvancedBox: true,
+					isShowFieldSelector: true,					
+					isShowPager: true
+                }             
+			}
+		};
+
+		</script>
+
+		<!-- Base64 -->
+		<script src="/js/base64.js"></script>
+
+		<!-- Plotly -->
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+		<!-- VisualTask -->
+		<script src="/js/visualtask.js"></script>
+
+	    <!-- VisualTask Grid -->
+	    <script src="/js/grid.visualtask.js"></script>
+
+		<script>		
+
+		window.VisualTaskConfig = {
+			endpoint: "server.php",
+			limitSizeMax: 10,
+			errorHTMLElement: "vtgerror",
+			queries: {
+				"main.users": [{
+					fieldName: "username",
+					header: "Username",
+					fieldType: "string"
+				}, {
+					fieldName: "id",
+					header: "User ID",
+					fieldType: "num"
+				}, {
+					fieldName: "insert_datetime",
+					header: "Insert Datetime",
+					fieldType: "datetime"
+				}]
+			}
+		};
+
+		VisualTask.query(task);
+
+		</script>
+
+	</body>
+</html>
+
