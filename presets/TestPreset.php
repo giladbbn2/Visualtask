@@ -3,7 +3,7 @@
 class TestPreset extends VisualtaskPresetBase {
 
 	public $allowed = array(
-		"res1" => array("main.users", "main.tbl1")
+		"res1" => array("test.users", "test.tbl1")
 	);
 
 	public function pre_query(&$options){
