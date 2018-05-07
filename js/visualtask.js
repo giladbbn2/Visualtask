@@ -48,7 +48,10 @@ var VisualTask = (function(){
 		xhr.open('post', window.VisualTaskConfig.endpoint);
 
 		xhr.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
-		xhr.send("options="+JSON.stringify({ queries: options.queries }));
+		xhr.send("options="+JSON.stringify({
+			queries: options.queries,
+			debug: (typeof window.VisualTaskConfig.debug === "boolean" && window.VisualTaskConfig.debug ? true : false)
+		}));
 
 		xhr.onreadystatechange = function () {
 

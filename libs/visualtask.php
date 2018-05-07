@@ -334,6 +334,11 @@ class Visualtask {
 		if (!isset($this->options["queries"]) || !is_array($this->options["queries"]))
 			return false;
 
+		if (isset($this->options["debug"]) && $this->options["debug"] === true)
+			$this->options["debug"] = array();
+		else
+			unset($this->options["debug"]);
+
 		$this->options["results"] = array();		
 
 		$preset_classname = ucfirst($preset_name) . "Preset";
