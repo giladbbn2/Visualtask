@@ -25,6 +25,7 @@
 	<body>
 
 		<div id="graph1"></div>
+		<div id="graph2"></div>
 		<div id="vtgerror"></div>
 
 		<script>
@@ -49,7 +50,7 @@
 						fieldName: "id",
 						fieldType: "num",
 						op: ">",
-						val: 10
+						val: 0
 					}],
 					groupBy: [{
 						function: "date",
@@ -61,7 +62,7 @@
 						dir: "desc"
 					}],
 					limit: {
-						offset: 5,
+						offset: 0,
 						size: 10
 					}
 				}
@@ -86,7 +87,31 @@
 					isShowAdvancedBox: true,
 					isShowFieldSelector: true,					
 					isShowPager: true
-                }             
+                },
+                g2: {
+                	HTMLElementId: "graph2",
+                	lib: "plotly",
+                	queryId: "q1",
+                	fields: [{
+                		fieldName: "t"
+                	},{
+                		fieldName: "id"
+                	}],
+					config: {
+						data: [{
+							type: "scatter",
+							xFieldId: 0,
+							yFieldId: 1,
+							line: {color: 'red'}
+						}],
+						layout: {
+							title: "number of insert users each day",
+                            xaxis: {
+                                type: "date"
+                            }
+						}
+					}
+                }         
 			}
 		};
 
@@ -96,7 +121,7 @@
 		<script src="/js/base64.js"></script>
 
 		<!-- Plotly -->
-		<!--<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>-->
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 		<!-- VisualTask -->
 		<script src="/js/visualtask.js"></script>
