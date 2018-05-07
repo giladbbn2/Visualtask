@@ -44,7 +44,7 @@
 						function: "count",
 						fieldName: "id"
 					}],
-					from: "main.users",
+					from: "test.users",
 					where: [{
 						fieldName: "id",
 						fieldType: "num",
@@ -111,7 +111,7 @@
 			limitSizeMax: 10,		// cannot be higher than what is set on server side
 			errorHTMLElement: "vtgerror",
 			queries: {
-				"main.users": [{
+				"test.users": [{
 					fieldName: "username",
 					header: "Username",
 					fieldType: "string"
@@ -124,7 +124,8 @@
 					header: "Insert Datetime",
 					fieldType: "datetime"
 				}]
-			}
+			},
+			debug: true
 		};
 
 		VisualTask.query(task);
