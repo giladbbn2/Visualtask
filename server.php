@@ -22,7 +22,7 @@ if (isset($_POST["options"])){
 			"host" => "localhost",
 			"user" => "db_user1",
 			"pass" => "123456abcdeFGH",
-			"db_name" => "users",
+			"db_name" => "test",
 			"port" => 3306
 		)
 	));

@@ -338,7 +338,7 @@ class Visualtask {
 
 		$preset_classname = ucfirst($preset_name) . "Preset";
 
-		include_once $this->presets_path . DS . $preset_classname . ".php";
+		include_once $this->presets_path . DIRECTORY_SEPARATOR . $preset_classname . ".php";
 
 		$this->preset = new $preset_classname();
 
