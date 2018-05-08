@@ -5,8 +5,9 @@
 error_reporting( E_ALL );
 ini_set('display_errors', 1);
 
-define("VTG_SERVER_ROOT", __DIR__);
-define("VTG_SERVER_LIBS", VTG_SERVER_ROOT . DIRECTORY_SEPARATOR . "libs");
+define("VT_SERVER_ROOT", __DIR__);
+define("VT_SERVER_LIBS", VT_SERVER_ROOT . DIRECTORY_SEPARATOR . "libs");
+define("VT_SERVER_VTG", VT_SERVER_ROOT . DIRECTORY_SEPARATOR . "vt");
 
 $options = array();
 
@@ -15,7 +16,7 @@ if (isset($_POST["options"])){
 
 	// load mysql db interface (mysqli) - currently visualtask supports only mysql query syntax
 
-	include_once VTG_SERVER_LIBS . DIRECTORY_SEPARATOR . "mysql.php";
+	include_once VT_SERVER_LIBS . DIRECTORY_SEPARATOR . "mysql.php";
 
 	$mysql = new DB(array(
 		"conn1" => array(
@@ -33,22 +34,32 @@ if (isset($_POST["options"])){
 
 	// init visualtask
 
-	include_once VTG_SERVER_LIBS . DIRECTORY_SEPARATOR . "visualtask.php";
-	include_once VTG_SERVER_ROOT . DIRECTORY_SEPARATOR . "vtg" . DIRECTORY_SEPARATOR . "vtgconfig.php";
+	include_once VT_SERVER_LIBS . DIRECTORY_SEPARATOR . "visualtask.php";
+	include_once VT_SERVER_VTG . DIRECTORY_SEPARATOR . "vtgconfig.php";
 
 	$vtg = new Visualtask();
-	$vtg->config = new VTGConfig();
+	$vtg->config = new VTConfig();
 	$vtg->mysql_db = $db;
 	$vtg->limit_size_default = 10;
 	$vtg->limit_size_max = 100;
 	
 
+	if (isset($_GET["preset"]) && $_GET["preset"] === "preset1"){
+
+		// use preset1
+
+		include_once VT_SERVER_VTG . DIRECTORY_SEPARATOR . "preset1.php";
+
+		$options = $vtg->preset(new preset1(), $_POST["options"]);
+
+	} else {
+
+		// user render()
+
+		
+
+	}
 	
-	// use preset1
-
-	include_once VTG_SERVER_ROOT . DIRECTORY_SEPARATOR . "vtg" . DIRECTORY_SEPARATOR . "preset1.php";
-
-	$options = $vtg->preset(new preset1(), $_POST["options"]);
 
 }
 

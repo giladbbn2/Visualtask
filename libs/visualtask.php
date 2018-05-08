@@ -299,6 +299,150 @@ class Visualtask {
 		return true;
 	}
 
+	public function render($tplId, $config){
+
+		/*
+			$config = array(
+
+
+				// if this is omitted then advanced menu and field selector cannot be used
+				// this key will not be exposed in html
+				"entities" = array(								
+					"mysql" => array("tbl1")
+				),
+
+
+
+
+				"endpoint" => "http://localhost/server.php",
+				"errorHTMLElement"	=> "HTMLElementId1",
+				"isAutoQuery" => boolean,					// will visualtask automatically query this task when DOM is loaded?
+				"debug" => boolean,								// default is false
+
+
+				"task" => array(
+					
+					"taskId" => string,
+					"queries" => array(
+						"q1" => ...
+					), 
+					"graphs" => array(
+						"g1" => array(
+							"HTMLElementId" => "HTMLElementId2",
+							"lib" => "visualtaskgrid" or "plotly",
+							"queryId" => "q1",
+							"fields" => array(
+								"fieldName" => "",
+
+								// optional visualtaskgrid properties:
+
+								"fieldType" => "string",
+								"isHide" => false,
+								"isSortable" => true,
+								"isGroupable" => true,
+
+
+								// some more
+
+							),
+
+							// optional visualtaskgrid properties:
+	
+							"header" => array(
+								"values" => array(...)
+							),
+							"isShowFiltering" => true,
+							"isShowAdvancedBox" => true,
+							"isShowFieldSelector" => true,
+							"isShowPager" => true
+
+							// required plotly properties:
+
+							config: {
+								data: [{
+									type: "scatter",
+									xFieldId: 0,
+									yFieldId: 1,
+									line: {color: 'red'}
+								}],
+								layout: {
+									title: "number of inserted users each day",
+		                            xaxis: {
+		                                type: "date"
+		                            }
+								}
+							}						
+		
+						)
+					)
+
+				)
+
+
+			)
+
+		*/
+
+
+		if (!is_array($config) || !isset($config["endpoint"]) || !isset($config["task"]) || !is_array($config["task"]))
+			return false;
+
+		if (!is_subclass_of($this->config, "VisualtaskConfigBase"))
+			return false;
+
+		if (!isset($this->config->tpls[$tplId]))
+			return false;
+
+
+		
+		$task = $config["task"];
+		unset($config["task"]);
+
+		if (isset($config["entities"])){
+			
+			$config["queries"] = array();
+
+			if (is_array($config["entities"]) && key($config["entities"]) !== null){
+
+				foreach ($config["entities"] as $real_type => $entities_arr){
+
+					if (!isset($this->config->entities[$real_type]))
+						continue;
+
+					foreach ($entities_arr as $k => $entity)
+						if (isset($this->config->entities[$real_type][$entity]))
+							$config["queries"][$entity] = $this->config->entities[$real_type][$entity];
+
+
+				}
+
+			}
+
+			unset($config["entities"]);
+
+		}
+
+		$config["limitSizeMax"] = $this->limit_size_max;
+
+		if (!isset($config["isAutoQuery"]) || $config["isAutoQuery"] !== true)
+			$config["isAutoQuery"] = false;
+
+
+		/*
+
+			php vars used in tpl:
+
+			$config
+			$task
+
+		*/
+
+
+		@include_once $this->config->tpls[$tplId];
+		die();
+
+	}
+
 	public function query(){
 
 		if (!is_subclass_of($this->config, "VisualtaskConfigBase"))
@@ -408,5 +552,7 @@ abstract class VisualtaskPresetBase {
 abstract class VisualtaskConfigBase {
 
 	public $resource_types = array();
+	public $tpls = array();
+	public $entities_mysql = array();
 
 }
