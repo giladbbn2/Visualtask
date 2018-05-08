@@ -1,6 +1,6 @@
 <?php
 
-class TestPreset extends VisualtaskPresetBase {
+class preset1 extends VisualtaskPresetBase {
 
 	public $allowed = array(
 		"res1" => array("test.users", "test.tbl1")

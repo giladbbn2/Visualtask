@@ -2,15 +2,14 @@
 
 class Visualtask { 
 
-	public $db = null;	// Queryable
-	public $presets_path = null;
-	
+	public $config = null;
+	public $allowed = array();
+	public $mysql_db = null;	// Queryable interface
 	public $limit_size_default = 10;
 	public $limit_size_max = 10;
 
-	public $sanitize_search = ["\"", "'", "<", ">", "\0", "\b", "\r", "\t", "\Z", "\\", "\x00", "\n", "\x1a", "(", ")"];
-
-	public $aggregate_funcs = array(
+	protected $sanitize_search = ["\"", "'", "<", ">", "\0", "\b", "\r", "\t", "\Z", "\\", "\x00", "\n", "\x1a", "(", ")"];
+	protected $aggregate_funcs = array(
 		"count" => array("count(",")"),
 		"countd" => array("count(distinct ",")"),
 		"sum" => array("sum(",")"),
@@ -32,6 +31,7 @@ class Visualtask {
 
 
 
+
 	protected function s($str){
 		
 		// general purpose sanitization method, also searches for "(" and ")" on top of usual suspects
@@ -39,50 +39,25 @@ class Visualtask {
 		return str_replace($this->sanitize_search, "", $str);
 	}
 
-	protected function query(){
+	protected function query_mysql(&$queries, &$allowed_entities){
 
-		// res1 queries
+		if ($this->mysql_db === null)
+			return false;
 
-		$res1_queries = array();
-
-		foreach ($this->options["queries"] as $query_id => $query){
-
-			if (!isset($query["select"]) || !isset($query["from"]))
-				continue;
-
-			if (isset($query["type"])){
-				$type = $query["type"];
-			} else {
-				$type = "";
-				$this->options["queries"][$query_id]["type"] = "";
-			}
-
-			switch ($type){
-				case "res1":
-					if (array_key_exists("res1", $this->preset->allowed))
-						$res1_queries[$query_id] = $query;
-					break;
-			}
-		}
-
-		if (count($res1_queries) > 0)
-			$this->res1($res1_queries, $this->options);
-
-		// end res1 queries
-	}
-
-	protected function res1($queries){
-
-		// res1 is db
-
-		if (@$this->db->is_connected !== true)
+		if (@$this->mysql_db->is_connected !== true)
 			return false;
 
 		$sql_arr = array();
 
 		foreach ($queries as $query_id => $query){
 
-			if (!array_key_exists("res1", $this->preset->allowed) || !in_array($query["from"], $this->preset->allowed["res1"]))
+			if (!isset($query["select"]) || !isset($query["from"]))
+				continue;
+
+
+			// check that table is allowed
+
+			if (!in_array($query["from"], $allowed_entities))
 				continue;
 
 
@@ -306,11 +281,11 @@ class Visualtask {
 			$sql_arr[] = $sql;
 		}
 
-		if (isset($this->options["debug"]))
-			$this->options["debug"]["res1"] = $sql_arr;
+		if (isset($this->options["debug"]) && is_array($this->options["debug"]))
+			$this->options["debug"]["mysql"] = $sql_arr;
 
 		try {
-			$results = $this->db->query($sql_arr);	
+			$results = $this->mysql_db->query($sql_arr);	
 		} catch (Exception $ex){
 			return false;
 		}
@@ -324,9 +299,52 @@ class Visualtask {
 		return true;
 	}
 
-	public function preset($preset_name = "", &$options){
+	public function query(){
 
-		if ($preset_name === "" || $options === "" || $options === null)
+		if (!is_subclass_of($this->config, "VisualtaskConfigBase"))
+			return false;
+
+		$allowed_types = array_keys($this->allowed);
+
+		$allowed_queries_by_real_type = array();
+		$allowed_entities_by_real_type = array();
+
+		foreach ($this->options["queries"] as $query_id => $query){
+
+			if (!isset($query["type"]))
+				continue;
+
+			$type = $query["type"];
+
+			if (!in_array($type, $allowed_types))
+				continue;
+
+			if (!isset($this->config->resource_types[$type]))
+				continue;
+
+			$real_type = $this->config->resource_types[$type];
+			
+			if (key($allowed_queries_by_real_type[$real_type]) === null)
+				$allowed_queries_by_real_type[$real_type] = array();
+
+			$allowed_queries_by_real_type[$real_type][$query_id] = $query;
+
+			if (key($allowed_entities_by_real_type[$real_type]) === null)
+				$allowed_entities_by_real_type[$real_type] = $this->allowed[$type];
+
+		}
+
+		foreach ($allowed_queries_by_real_type as $real_type => $queries){
+			$method_name = "query_" . $real_type;
+			@$this->$method_name($queries, $allowed_entities_by_real_type[$real_type]);
+		}
+
+		return true;
+	}
+
+	public function preset($preset_instance, &$options){
+
+		if ($preset_name === "" || $options === "" || $options === null || !is_subclass_of($this->config, "VisualtaskConfigBase") || !is_subclass_of($preset_instance, "VisualtaskPresetBase"))
 			return false;
 
 		$this->options = @json_decode($options, true);
@@ -339,13 +357,11 @@ class Visualtask {
 		else
 			unset($this->options["debug"]);
 
-		$this->options["results"] = array();		
+		$this->options["results"] = array();
 
-		$preset_classname = ucfirst($preset_name) . "Preset";
+		$this->preset = $preset_instance;
 
-		include_once $this->presets_path . DIRECTORY_SEPARATOR . $preset_classname . ".php";
-
-		$this->preset = new $preset_classname();
+		$this->allowed = &$this->preset->allowed;
 
 		$this->preset->pre_query($this->options);
 
@@ -357,9 +373,16 @@ class Visualtask {
 	}
 }
 
+
+
+
+
+
+
+
 /*
 
-	All presets in the presets_path must extend VisualtaskPresetBase
+	All presets must extend VisualtaskPresetBase
 
 */
 abstract class VisualtaskPresetBase {
@@ -373,4 +396,17 @@ abstract class VisualtaskPresetBase {
 	public function post_query(&$options){
 
 	}
+}
+
+
+
+
+
+/*
+	Visualtask config base class
+*/
+abstract class VisualtaskConfigBase {
+
+	public $resource_types = array();
+
 }

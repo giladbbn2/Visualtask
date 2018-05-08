@@ -7,11 +7,11 @@ ini_set('display_errors', 1);
 
 define("VTG_SERVER_ROOT", __DIR__);
 define("VTG_SERVER_LIBS", VTG_SERVER_ROOT . DIRECTORY_SEPARATOR . "libs");
-define("VTG_SERVER_PRESETS", VTG_SERVER_ROOT . DIRECTORY_SEPARATOR . "presets");
 
 $options = array();
 
 if (isset($_POST["options"])){
+
 
 	// load mysql db interface (mysqli) - currently visualtask supports only mysql query syntax
 
@@ -30,16 +30,25 @@ if (isset($_POST["options"])){
 	$db = $mysql->connect("conn1");			// returns Queryable
 	$db->is_fetch_assoc = false;			// instead of returning an associative array queries return the old-fashioned plain arrays
 
+
+	// init visualtask
+
 	include_once VTG_SERVER_LIBS . DIRECTORY_SEPARATOR . "visualtask.php";
+	include_once VTG_SERVER_ROOT . DIRECTORY_SEPARATOR . "vtg" . DIRECTORY_SEPARATOR . "vtgconfig.php";
 
 	$vtg = new Visualtask();
+	$vtg->config = new VTGConfig();
+	$vtg->mysql_db = $db;
 	$vtg->limit_size_default = 10;
 	$vtg->limit_size_max = 100;
-	$vtg->presets_path = VTG_SERVER_PRESETS;
-	$vtg->db = $db;
+	
 
-	// use TestPreset
-	$options = $vtg->preset("test", $_POST["options"]);
+	
+	// use preset1
+
+	include_once VTG_SERVER_ROOT . DIRECTORY_SEPARATOR . "vtg" . DIRECTORY_SEPARATOR . "preset1.php";
+
+	$options = $vtg->preset(new preset1(), $_POST["options"]);
 
 }
 
