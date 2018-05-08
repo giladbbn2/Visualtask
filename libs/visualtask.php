@@ -302,6 +302,11 @@ class Visualtask {
 	public function render($tplId, $config){
 
 		/*
+			render() is also using some preset when interacting with the server
+
+
+
+
 			$config = array(
 
 

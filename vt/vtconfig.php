@@ -12,7 +12,7 @@ class VTConfig extends VisualtaskConfigBase {
 
 	public $tpls = array(
 
-		"tpl1" => VT_SERVER_VTG . DIRECTORY_SEPARATOR . "tpl1.php";
+		"tpl1" => VT_SERVER_VTG . DIRECTORY_SEPARATOR . "tpl1.php"
 
 	);
 
