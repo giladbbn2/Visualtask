@@ -35,7 +35,7 @@ if (isset($_POST["options"])){
 	// init visualtask
 
 	include_once VT_SERVER_LIBS . DIRECTORY_SEPARATOR . "visualtask.php";
-	include_once VT_SERVER_VTG . DIRECTORY_SEPARATOR . "vtgconfig.php";
+	include_once VT_SERVER_VTG . DIRECTORY_SEPARATOR . "vtconfig.php";
 
 	$vtg = new Visualtask();
 	$vtg->config = new VTConfig();
@@ -56,7 +56,7 @@ if (isset($_POST["options"])){
 
 		// user render()
 
-		
+
 
 	}
 	
