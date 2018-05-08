@@ -25,6 +25,7 @@
 	<body>
 
 		<div id="graph1"></div>
+		<div id="graph2"></div>
 		<div id="vtgerror"></div>
 
 		<script>
