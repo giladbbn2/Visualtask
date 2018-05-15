@@ -2,14 +2,13 @@
 
 class Visualtask { 
 
-	public $config = null;
-	public $allowed = array();
+	public $resource_types = array();
 	public $mysql_db = null;	// Queryable interface
 	public $limit_size_default = 10;
 	public $limit_size_max = 10;
 
 	protected $sanitize_search = ["\"", "'", "<", ">", "\0", "\b", "\r", "\t", "\Z", "\\", "\x00", "\n", "\x1a", "(", ")"];
-	protected $aggregate_funcs = array(
+	protected $mysql_aggregate_funcs = array(
 		"count" => array("count(",")"),
 		"countd" => array("count(distinct ",")"),
 		"sum" => array("sum(",")"),
@@ -28,7 +27,7 @@ class Visualtask {
 
 	protected $preset = null;
 	protected $options = null;
-
+	protected $allowed = array();
 
 
 
@@ -78,8 +77,8 @@ class Visualtask {
 				if (isset($query["select"][$i]["function"]))
 					$function = $this->s($query["select"][$i]["function"]);
 					
-				if (strlen($function) > 0 && array_key_exists($function, $this->aggregate_funcs))
-					$x = $this->aggregate_funcs[$function][0] . $x . $this->aggregate_funcs[$function][1];
+				if (strlen($function) > 0 && array_key_exists($function, $this->mysql_aggregate_funcs))
+					$x = $this->mysql_aggregate_funcs[$function][0] . $x . $this->mysql_aggregate_funcs[$function][1];
 
 				if (isset($query["select"][$i]["alias"]))
 					$x .= " as " . $this->s($query["select"][$i]["alias"]);
@@ -196,8 +195,8 @@ class Visualtask {
 					if (isset($query["groupBy"][$i]["function"]))
 						$function = $this->s($query["groupBy"][$i]["function"]);
 						
-					if (strlen($function) > 0 && array_key_exists($function, $this->aggregate_funcs))
-						$x = $this->aggregate_funcs[$function][0] . $x . $this->aggregate_funcs[$function][1];
+					if (strlen($function) > 0 && array_key_exists($function, $this->mysql_aggregate_funcs))
+						$x = $this->mysql_aggregate_funcs[$function][0] . $x . $this->mysql_aggregate_funcs[$function][1];
 
 					if (!$is_first)
 						$sql .= ", " . $x;
@@ -226,13 +225,12 @@ class Visualtask {
 
 					$x = $this->s($query["orderBy"][$i]["fieldName"]);
 
-
 					$function = "";
 					if (isset($query["orderBy"][$i]["function"]))
 						$function = $this->s($query["orderBy"][$i]["function"]);
 
-					if (strlen($function) > 0 && array_key_exists($function, $this->aggregate_funcs))
-						$x = $this->aggregate_funcs[$function][0] . $x . $this->aggregate_funcs[$function][1];
+					if (strlen($function) > 0 && array_key_exists($function, $this->mysql_aggregate_funcs))
+						$x = $this->mysql_aggregate_funcs[$function][0] . $x . $this->mysql_aggregate_funcs[$function][1];
 
 					if (isset($query["orderBy"][$i]["dir"]) && $query["orderBy"][$i]["dir"] == "desc")
 						$x .= " desc";
@@ -299,159 +297,7 @@ class Visualtask {
 		return true;
 	}
 
-	public function render($tplId, $config){
-
-		/*
-			render() is also using some preset when interacting with the server
-
-
-
-
-			$config = array(
-
-
-				// if this is omitted then advanced menu and field selector cannot be used
-				// this key will not be exposed in html
-				"entities" = array(								
-					"mysql" => array("tbl1")
-				),
-
-
-
-
-				"endpoint" => "http://localhost/server.php",
-				"errorHTMLElement"	=> "HTMLElementId1",
-				"isAutoQuery" => boolean,					// will visualtask automatically query this task when DOM is loaded?
-				"debug" => boolean,								// default is false
-
-
-				"task" => array(
-					
-					"taskId" => string,
-					"queries" => array(
-						"q1" => ...
-					), 
-					"graphs" => array(
-						"g1" => array(
-							"HTMLElementId" => "HTMLElementId2",
-							"lib" => "visualtaskgrid" or "plotly",
-							"queryId" => "q1",
-							"fields" => array(
-								"fieldName" => "",
-
-								// optional visualtaskgrid properties:
-
-								"fieldType" => "string",
-								"isHide" => false,
-								"isSortable" => true,
-								"isGroupable" => true,
-
-
-								// some more
-
-							),
-
-							// optional visualtaskgrid properties:
-	
-							"header" => array(
-								"values" => array(...)
-							),
-							"isShowFiltering" => true,
-							"isShowAdvancedBox" => true,
-							"isShowFieldSelector" => true,
-							"isShowPager" => true
-
-							// required plotly properties:
-
-							config: {
-								data: [{
-									type: "scatter",
-									xFieldId: 0,
-									yFieldId: 1,
-									line: {color: 'red'}
-								}],
-								layout: {
-									title: "number of inserted users each day",
-		                            xaxis: {
-		                                type: "date"
-		                            }
-								}
-							}						
-		
-						)
-					)
-
-				)
-
-
-			)
-
-		*/
-
-
-		if (!is_array($config) || !isset($config["endpoint"]) || !isset($config["task"]) || !is_array($config["task"]))
-			return false;
-
-		if (!is_subclass_of($this->config, "VisualtaskConfigBase"))
-			return false;
-
-		if (!isset($this->config->tpls[$tplId]))
-			return false;
-
-
-		
-		$task = $config["task"];
-		unset($config["task"]);
-
-		if (isset($config["entities"])){
-			
-			$config["queries"] = array();
-
-			if (is_array($config["entities"]) && key($config["entities"]) !== null){
-
-				foreach ($config["entities"] as $real_type => $entities_arr){
-
-					if (!isset($this->config->entities[$real_type]))
-						continue;
-
-					foreach ($entities_arr as $k => $entity)
-						if (isset($this->config->entities[$real_type][$entity]))
-							$config["queries"][$entity] = $this->config->entities[$real_type][$entity];
-
-
-				}
-
-			}
-
-			unset($config["entities"]);
-
-		}
-
-		$config["limitSizeMax"] = $this->limit_size_max;
-
-		if (!isset($config["isAutoQuery"]) || $config["isAutoQuery"] !== true)
-			$config["isAutoQuery"] = false;
-
-
-		/*
-
-			php vars used in tpl:
-
-			$config
-			$task
-
-		*/
-
-
-		@include_once $this->config->tpls[$tplId];
-		die();
-
-	}
-
 	public function query(){
-
-		if (!is_subclass_of($this->config, "VisualtaskConfigBase"))
-			return false;
 
 		$allowed_types = array_keys($this->allowed);
 
@@ -468,10 +314,10 @@ class Visualtask {
 			if (!in_array($type, $allowed_types))
 				continue;
 
-			if (!isset($this->config->resource_types[$type]))
+			if (!isset($this->resource_types[$type]))
 				continue;
 
-			$real_type = $this->config->resource_types[$type];
+			$real_type = $this->resource_types[$type];
 			
 			if (!isset($allowed_queries_by_real_type[$real_type]))
 				$allowed_queries_by_real_type[$real_type] = array();
@@ -493,7 +339,7 @@ class Visualtask {
 
 	public function preset($preset_instance, &$options){
 
-		if ($options === "" || $options === null || !is_subclass_of($this->config, "VisualtaskConfigBase") || !is_subclass_of($preset_instance, "VisualtaskPresetBase"))
+		if ($options === "" || $options === null || !is_subclass_of($preset_instance, "VisualtaskPresetBase"))
 			return false;
 
 		$this->options = @json_decode($options, true);
@@ -527,8 +373,6 @@ class Visualtask {
 
 
 
-
-
 /*
 
 	All presets must extend VisualtaskPresetBase
@@ -547,17 +391,3 @@ abstract class VisualtaskPresetBase {
 	}
 }
 
-
-
-
-
-/*
-	Visualtask config base class
-*/
-abstract class VisualtaskConfigBase {
-
-	public $resource_types = array();
-	public $tpls = array();
-	public $entities_mysql = array();
-
-}
