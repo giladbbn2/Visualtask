@@ -1,7 +1,5 @@
 ﻿/*
 *	Visutaltask grid client library
-*	OfferToro, Gilad Babin
-* 	Packed: http://dean.edwards.name/packer/ and then https://www.javascriptobfuscator.com/Javascript-Obfuscator.aspx
 */
 
 var VisualTaskGrid = (function(){
