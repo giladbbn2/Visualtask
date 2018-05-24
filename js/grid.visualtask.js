@@ -1262,7 +1262,7 @@ var VisualTaskGrid = (function(){
 
 		selectOpHTML.push("</select>");
 
-		var html = "<div class='vtg-filter-criterion'>" + selectFieldHTML.join("") + selectOpHTML.join("") + "<input class='vtg-filter-criterion-value' type='text' value='"+val+"' />" + (typeof useDictionaryId === "undefined" ? "" : "") + "<input type='button' value='-' onclick='this.parentElement.parentElement.removeChild(this.parentElement)' /></div>";
+		var html = "<div class='vtg-filter-criterion'>" + selectFieldHTML.join("") + selectOpHTML.join("") + "<input class='vtg-filter-criterion-value' type='text' value='"+val+"' /><input type='button' class='vtg-filter-criterion-calendar' value='&#128198;' onclick='window.VisualTaskConfig.initCalendar(this.parentElement.querySelector(\".vtg-filter-criterion-value\"))' /><input type='button' class='vtg-filter-criterion-remove' value='X' onclick='this.parentElement.parentElement.removeChild(this.parentElement)' /></div>";
 
 		return html;
 	}

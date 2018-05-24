@@ -92,6 +92,9 @@
 			endpoint: "server.php",
 			limitSizeMax: 10,		// cannot be higher than what is set on server side
 			errorHTMLElement: "vtgerror",
+			initCalendar: function(el){
+				alert("init element using your favorite datepicker");
+			},
 			queries: {
 				"test.users": [{
 					fieldName: "username",
