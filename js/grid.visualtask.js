@@ -42,7 +42,12 @@ var VisualTaskGrid = (function(){
 
 		var graph = _options.graphs[graphId]; 
 
-		var results = _options.results[graph.queryId];
+		var results;
+
+		if (typeof _options.results[graph.queryId] === "undefined")
+			results = [];
+		else
+			results = _options.results[graph.queryId];
 
 		var queryConfig = _options.queries[graph.queryId];
 
