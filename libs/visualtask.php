@@ -342,7 +342,10 @@ class Visualtask {
 		if ($options === "" || $options === null || !is_subclass_of($preset_instance, "VisualtaskPresetBase"))
 			return false;
 
-		$this->options = @json_decode($options, true);
+		if (is_array($options))	// already decoded into an array
+			$this->options = $options;
+		else
+			$this->options = @json_decode($options, true);
 
 		if (!isset($this->options["queries"]) || !is_array($this->options["queries"]))
 			return false;
