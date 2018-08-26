@@ -47,6 +47,14 @@ $vt->limit_size_max = 100;
 
 include_once VT_SERVER_VT . DIRECTORY_SEPARATOR . "preset1.php";
 
+$sql_transform_cbs = array("q1" => function(&$sql, &$query){
+
+	// add joins and more conditions dynamically (mysql)
+		
+	//$sql = str_replace("where 1=1", "join tbl2 on tbl1.id = tbl2.id where 1=1 and tbl2.name = 'a'", $sql);
+
+});
+
 $options = $vt->preset(new preset1(), $_POST["options"]);
 
 header('Content-type: application/json');
