@@ -51,7 +51,7 @@ $sql_transform_cbs = array("q1" => function(&$sql, &$query){
 
 	// add joins and more conditions dynamically (mysql)
 		
-	//$sql = str_replace("where 1=1", "join tbl2 on tbl1.id = tbl2.id where 1=1 and tbl2.name = 'a'", $sql);
+	//$sql = str_replace("where 1=1", "join test.tbl2 on test.tbl1.id = test.tbl2.id where 1=1 and test.tbl2.name = 'a'", $sql);
 
 });
 
