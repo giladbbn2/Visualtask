@@ -27,6 +27,7 @@ class Visualtask {
 
 	protected $preset = null;
 	protected $options = null;
+	protected $sql_transform_cbs = array();
 	protected $allowed = array();
 
 
@@ -42,7 +43,7 @@ class Visualtask {
 
 		if ($this->mysql_db === null)
 			return false;
-
+			
 		if (@$this->mysql_db->is_connected !== true)
 			return false;
 
@@ -100,6 +101,10 @@ class Visualtask {
 			// handle where
 
 			// for simplicity $query["where"] is a list of AND criteria
+
+			// automatically add WHERE 1=1
+
+			$sql .= " where 1=1";
 
 			if (isset($query["where"]) && is_array($query["where"])){
 
@@ -170,7 +175,8 @@ class Visualtask {
 				}
 
 				if (count($where) > 0)
-					$sql .= " where " . implode(" and ", $where);
+					$sql .= " and " . implode(" and ", $where);
+
 			}
 
 
@@ -276,6 +282,9 @@ class Visualtask {
 
 			$sql .= $limit_offset . ", " . $limit_size;
 
+			if (isset($this->sql_transform_cbs[$query_id]))
+				$this->sql_transform_cbs[$query_id]($sql, $query);
+
 			$sql_arr[] = $sql;
 		}
 
@@ -283,7 +292,7 @@ class Visualtask {
 			$this->options["debug"]["mysql"] = $sql_arr;
 
 		try {
-			$results = $this->mysql_db->query($sql_arr);	
+			$results = $this->mysql_db->query($sql_arr);
 		} catch (Exception $ex){
 			return false;
 		}
@@ -328,16 +337,16 @@ class Visualtask {
 				$allowed_entities_by_real_type[$real_type] = $this->allowed[$type];
 
 		}
-
+		
 		foreach ($allowed_queries_by_real_type as $real_type => $queries){
 			$method_name = "query_" . $real_type;
 			@$this->$method_name($queries, $allowed_entities_by_real_type[$real_type]);
 		}
-
+		
 		return true;
 	}
 
-	public function preset($preset_instance, &$options){
+	public function preset($preset_instance, $options, $sql_transform_cbs = array()){
 
 		if ($options === "" || $options === null || !is_subclass_of($preset_instance, "VisualtaskPresetBase"))
 			return false;
@@ -349,24 +358,26 @@ class Visualtask {
 
 		if (!isset($this->options["queries"]) || !is_array($this->options["queries"]))
 			return false;
-
+			
 		if (isset($this->options["debug"]) && $this->options["debug"] === true)
 			$this->options["debug"] = array();
 		else
 			unset($this->options["debug"]);
 
 		$this->options["results"] = array();
-
+		
 		$this->preset = $preset_instance;
-
+		
 		$this->allowed = &$this->preset->allowed;
+
+		$this->sql_transform_cbs = &$sql_transform_cbs;
 
 		$this->preset->pre_query($this->options);
 
 		$this->query();
 
 		$this->preset->post_query($this->options);
-
+		
 		return $this->options;
 	}
 }
