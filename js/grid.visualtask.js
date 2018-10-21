@@ -1,4 +1,4 @@
-﻿/*
+/*
 *	Visutaltask grid client library
 */
 
@@ -62,16 +62,21 @@ var VisualTaskGrid = (function(){
 		var isShowBottomAggregationRow = false, isShowTopAggregationRow = false;
 
 		var thFields = [];
+		
+		//var hiddenThHeaderIds = [];
 
 		for (var i=0; i<headerValues.length; i++){
 
 			htmlAttribs = [];
 			thClasses = ["vtg-header"];
 			fieldConfig = graph.fields[i];
-
+			
 			if (typeof fieldConfig.isHide === "boolean" && fieldConfig.isHide)
 				continue;
 
+			if (typeof fieldConfig.headerClasses === "object" && fieldConfig.headerClasses.constructor.name === "Array")
+				thClasses = thClasses.concat(fieldConfig.headerClasses);
+			
 			realFieldName = "";
 			rowCellId = -1;
 
