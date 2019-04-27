@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+
+        <div id="result" style="width:400px;height:400px"></div>
+
+        <script>
+            
+            var options = {
+                queries: {
+                    q1: {
+                        type: "res1",
+                        select: [{
+                            fieldName: "user_id"
+                        }, {
+                            fieldName: "name"
+                        }, {
+                            fieldName: "phone"
+                        }],
+                        from: "test.users",
+                        orderBy: [{
+                            fieldName: "user_id",
+                            dir: "desc"
+                        }]
+                    }
+                },
+                debug: true
+            };
+
+            var xhr = new XMLHttpRequest();
+
+            var url = "/0.2/test/1/server.php";
+
+            xhr.open('POST', url);
+
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+
+            xhr.onload = function(){
+
+                if (this.status === 200){
+                    
+                    document.getElementById("result").innerHTML = this.responseText;
+                    
+                } else {
+
+                    console.log('error');
+
+                }
+
+            };
+
+            xhr.send("options=" + encodeURIComponent(JSON.stringify(options)));
+
+            
+        </script>
+
+    </body>
+</html>
