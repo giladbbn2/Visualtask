@@ -82,7 +82,7 @@ abstract class VisualTaskBase {
 
 	public function preset($preset_instance, $options, $sql_transform_cbs = array()){
 
-		if ($options === "" || $options === null || !is_subclass_of($preset_instance, "VisualtaskPresetBase"))
+		if ($options === "" || $options === null || !is_subclass_of($preset_instance, "VisualTaskPresetBase"))
 			return false;
 
 		if (is_array($options))	// already decoded into an array
