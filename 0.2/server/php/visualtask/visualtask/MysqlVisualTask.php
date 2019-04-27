@@ -25,7 +25,7 @@ class MysqlVisualTask extends VisualTaskBase {
 
 		
 	protected function query_mysql(&$queries, &$allowed_entities){
-
+		echo "test";die();
 		if ($this->db === null)
 			return false;
 			
