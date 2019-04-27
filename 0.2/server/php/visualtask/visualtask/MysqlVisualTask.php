@@ -272,8 +272,6 @@ class MysqlVisualTask extends VisualTaskBase {
 
 			$sql .= $limit_offset . ", " . $limit_size;
 
-			echo $sql;die();
-
 			if (isset($this->sql_transform_cbs[$query_id]))
 					$this->sql_transform_cbs[$query_id]($sql, $query);
 
