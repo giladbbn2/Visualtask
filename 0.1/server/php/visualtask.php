@@ -7,6 +7,7 @@ class Visualtask {
 	public $limit_size_default = 10;
 	public $limit_size_max = 10;
 
+	// general purpose sanitization, also searches for "(" and ")" on top of usual suspects
 	protected $sanitize_search = ["\"", "'", "<", ">", "\0", "\b", "\r", "\t", "\Z", "\\", "\x00", "\n", "\x1a", "(", ")"];
 	protected $mysql_aggregate_funcs = array(
 		"count" => array("count(",")"),
@@ -33,10 +34,9 @@ class Visualtask {
 
 
 	protected function s($str){
-		
-		// general purpose sanitization method, also searches for "(" and ")" on top of usual suspects
 
 		return str_replace($this->sanitize_search, "", $str);
+
 	}
 
 	protected function query_mysql(&$queries, &$allowed_entities){
