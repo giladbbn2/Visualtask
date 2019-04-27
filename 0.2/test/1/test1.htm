@@ -51,7 +51,7 @@
                     
                     var o = JSON.parse(this.responseText);
 
-                    document.getElementById("result").innerHTML = JSON.stringify(o.results);
+                    document.getElementById("results").innerHTML = JSON.stringify(o.results);
                     document.getElementById("sql").innerHTML = JSON.stringify(o.debug.mysql[0]);
                     
                 } else {
