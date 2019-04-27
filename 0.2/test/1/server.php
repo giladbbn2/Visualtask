@@ -21,4 +21,4 @@ $mysqldb = new \VisualTask\DB\MysqlDB(array(
 $db = $mysqldb->connect("conn1");
 $db->set_fetch_assoc(false);
 
-echo "123";
+var_dump($db);
