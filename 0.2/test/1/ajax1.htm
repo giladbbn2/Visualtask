@@ -4,10 +4,10 @@
     <body>
 
         <h1>sent queries</h1>
-        <div id="queries" style="margin:0 auto"></div>        
+        <pre id="queries" style="margin:0 auto"></pre>        
 
         <h1>results</h1>
-        <div id="results" style="margin:0 auto"></div>
+        <pre id="results" style="margin:0 auto"></pre>
 
         <h1>sql</h1>
         <div id="sql" style="margin:0 auto"></div>
@@ -51,8 +51,8 @@
                     
                     var o = JSON.parse(this.responseText);
 
-                    document.getElementById("results").innerHTML = JSON.stringify(o.results);
-                    document.getElementById("sql").innerHTML = JSON.stringify(o.debug.mysql[0]);
+                    document.getElementById("results").innerHTML = JSON.stringify(o.results, undefined, 2);
+                    document.getElementById("sql").innerHTML = JSON.stringify(o.debug.mysql[0]).replace("\"", "");
                     
                 } else {
 
