@@ -24,7 +24,7 @@ $db = $mysqldb->connect("conn1");
 $db->set_fetch_assoc(false);
 
 // init visualtask
-$vt = new MysqlVisualTask();
+$vt = new \VisualTask\VisualTask\MysqlVisualTask();
 $vt->resource_types = array(
 	// exposed resource type name => real resource type in visualtask
 	"res1" => "mysql"
