@@ -24,7 +24,7 @@ class MysqlDB implements DB {
             
         $conn = $this->db_connections[$db_conn_name];
         
-        $q = new Queryable($conn["host"], $conn["user"], $conn["pass"], $conn["db_name"], $conn["port"]);
+        $q = new MysqlQueryable($conn["host"], $conn["user"], $conn["pass"], $conn["db_name"], $conn["port"]);
         
         $this->qs[$db_conn_name] = $q;
         
