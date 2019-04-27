@@ -3,8 +3,8 @@
 namespace VisualTask\VisualTask;
 
 
-/* All presets must extend VisualtaskPresetBase */
-abstract class VisualtaskPresetBase {
+/* All presets must extend VisualTaskPresetBase */
+abstract class VisualTaskPresetBase {
 
 	public $allowed = array();
 
@@ -17,7 +17,7 @@ abstract class VisualtaskPresetBase {
 	}
 }
 
-abstract class VisualtaskBase { 
+abstract class VisualTaskBase { 
 
 	public $resource_types = array();
 	public $db = null;	// Queryable interface

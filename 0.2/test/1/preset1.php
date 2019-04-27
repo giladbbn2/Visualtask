@@ -1,6 +1,6 @@
 <?php
 
-class preset1 extends \VisualTask\VisualTask\VisualtaskPresetBase {
+class preset1 extends \VisualTask\VisualTask\VisualTaskPresetBase {
 
 	public $allowed = array(
 		"res1" => array("test.users", "test.tbl1")
