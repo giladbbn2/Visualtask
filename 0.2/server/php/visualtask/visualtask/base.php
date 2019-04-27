@@ -72,9 +72,11 @@ abstract class VisualTaskBase {
 		}
 		
 		foreach ($allowed_queries_by_real_type as $real_type => $queries){
+
 			$method_name = "query_" . $real_type;
-			echo $method_name;
-			$this->$method_name($queries, $allowed_entities_by_real_type[$real_type]);
+
+			@$this->$method_name($queries, $allowed_entities_by_real_type[$real_type]);
+			
 		}
 		
         return true;

@@ -25,11 +25,11 @@ class MysqlVisualTask extends VisualTaskBase {
 
 		
 	protected function query_mysql(&$queries, &$allowed_entities){
-		echo "test";die();
+		
 		if ($this->db === null)
 			return false;
 			
-		if (@$this->db->is_connected !== true)
+		if ($this->db->get_is_connected() !== true)
 			return false;
 
 		$sql_arr = array();
