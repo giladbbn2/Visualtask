@@ -4,9 +4,10 @@ error_reporting( E_ALL );
 ini_set("display_errors", 1);
 
 
-echo "<pre>";print_r($_POST);die();
-
 if (isset($_POST["options"])){
+
+    $json = json_decode($_POST["options"], true);
+    echo "<pre>"; print_r($json);die();
 
     // include the vt_autoload_class function to load visualtask files properly
     include dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . "server" . DIRECTORY_SEPARATOR . "php" . DIRECTORY_SEPARATOR . "autoload.php";
