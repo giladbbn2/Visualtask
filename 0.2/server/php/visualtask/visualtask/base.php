@@ -17,7 +17,7 @@ abstract class VisualTaskPresetBase {
 	}
 }
 
-abstract class VisualTaskBase { 
+abstract class VisualTaskBase {
 
 	public $resource_types = array();
 	public $db = null;	// Queryable interface
@@ -76,7 +76,7 @@ abstract class VisualTaskBase {
 			$method_name = "query_" . $real_type;
 
 			@$this->$method_name($queries, $allowed_entities_by_real_type[$real_type]);
-			
+
 		}
 		
         return true;

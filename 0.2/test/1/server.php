@@ -32,7 +32,7 @@ if (isset($_POST["options"])){
         // exposed resource type name => real resource type in visualtask
         "res1" => "mysql"
     );
-    $vt->mysql_db = $db;
+    $vt->db = $db;
     $vt->limit_size_default = 10;
     $vt->limit_size_max = 100;
 
