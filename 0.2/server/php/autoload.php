@@ -3,7 +3,7 @@
 
 define("VT_DIR", __DIR__ . DIRECTORY_SEPARATOR . "visualtask");
 
-function autoload($class_fqn){
+function vt_autoload_class($class_fqn){
 
     $parts = explode("\\", $class_fqn);
 
