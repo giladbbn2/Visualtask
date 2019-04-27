@@ -26,8 +26,6 @@ class MysqlVisualTask extends VisualTaskBase {
 		
 	protected function query_mysql(&$queries, &$allowed_entities){
 
-		echo "<pre>"; print_r($queries);die();
-
 		if ($this->db === null)
 			return false;
 			
@@ -94,90 +92,88 @@ class MysqlVisualTask extends VisualTaskBase {
 
 			$sql .= " where 1=1";
 
-			if (isset($query["where"]) && is_array($query["where"])){
+			if (isset($query["where"]) && is_array($query["where"]) && key($query["where"]) !== null){
 
-					$where = array();
+				$where = array();
 
-					$where_count = count($query["where"]);
-					for ($i=0; $i<$where_count; $i++){
-						$item = $query["where"][$i];
+				$where_count = count($query["where"]);
+				for ($i=0; $i<$where_count; $i++){
+					$item = $query["where"][$i];
 
-						if (!isset($item["fieldName"]) || !isset($item["fieldType"]) || !isset($item["op"]) || !isset($item["val"]))
-							continue;
+					if (!isset($item["fieldName"]) || !isset($item["fieldType"]) || !isset($item["op"]) || !isset($item["val"]))
+						continue;
 
-						$field_name = $this->s($item["fieldName"]);
-						$field_type = $this->s($item["fieldType"]);
-						$op = $item["op"];
-						$val = $this->s($item["val"]);	// unquoted, could be comma delimited in case of op == "in"
+					$field_name = $this->s($item["fieldName"]);
+					$field_type = $this->s($item["fieldType"]);
+					$op = $item["op"];
+					$val = $this->s($item["val"]);	// unquoted, could be comma delimited in case of op == "in"
 
-						switch ($op){
-							case "=":
-							case ">":
-							case ">=":
-							case "<":
-							case "<=":
-							case "!=":
+					switch ($op){
+						case "=":
+						case ">":
+						case ">=":
+						case "<":
+						case "<=":
+						case "!=":
 
-								if ($field_type === "datetime" || $field_type === "string")
-									$where[] = $field_name . " " . $op . " '" . $val . "'";
-								else
-									$where[] = $field_name . " " . $op . " " . $val;
+							if ($field_type === "datetime" || $field_type === "string")
+								$where[] = $field_name . " " . $op . " '" . $val . "'";
+							else
+								$where[] = $field_name . " " . $op . " " . $val;
 
-								break;
+							break;
 
-							case "in":
+						case "in":
 
-								if ($field_type === "datetime" || $field_type === "string")
-									$where[] = $field_name . " in('" . implode("','", explode(",", $val)) . "')";
-								else
-									$where[] = $field_name . " in(" . $val . ")";
+							if ($field_type === "datetime" || $field_type === "string")
+								$where[] = $field_name . " in('" . implode("','", explode(",", $val)) . "')";
+							else
+								$where[] = $field_name . " in(" . $val . ")";
 
-								break;
+							break;
 
-							case "startswith":
+						case "startswith":
 
-								if ($field_type === "datetime" || $field_type === "string")
-									$where[] = $field_name . " like '" . $val . "%'";
+							if ($field_type === "datetime" || $field_type === "string")
+								$where[] = $field_name . " like '" . $val . "%'";
 
-								break;
+							break;
 
-							case "endswith":
+						case "endswith":
 
-								if ($field_type === "datetime" || $field_type === "string")
-									$where[] = $field_name . " like '%" . $val . "'";
+							if ($field_type === "datetime" || $field_type === "string")
+								$where[] = $field_name . " like '%" . $val . "'";
 
-								break;
+							break;
 
-							case "includes":
+						case "includes":
 
-								if ($field_type === "datetime" || $field_type === "string")
-									$where[] = $field_name . " like '%" . $val . "%'";
+							if ($field_type === "datetime" || $field_type === "string")
+								$where[] = $field_name . " like '%" . $val . "%'";
 
-								break;
-
-						}
-
-						if (isset($item["useDictionaryId"])){
-							// TODO
-						}
+							break;
 
 					}
 
-					if (count($where) > 0)
-						$sql .= " and " . implode(" and ", $where);
+					if (isset($item["useDictionaryId"])){
+						// TODO
+					}
+
+				}
+
+				if (count($where) > 0)
+					$sql .= " and " . implode(" and ", $where);
 
 			}
 
 
 			// handle group by
 
-			if (isset($query["groupBy"])){
+			if (isset($query["groupBy"]) && is_array($query["groupBy"]) && key($query["groupBy"]) !== null){
+
+				$sql .= " group by ";
 
 				$groupby_count = count($query["groupBy"]);
-
-				if ($groupby_count > 0)
-					$sql .= " group by ";
-
 				$is_first = true;
 				for ($i=0; $i<$groupby_count; $i++){
 
@@ -207,18 +203,16 @@ class MysqlVisualTask extends VisualTaskBase {
 
 			// handle order by
 
-			if (isset($query["orderBy"])){
+			if (isset($query["orderBy"]) && is_array($query["orderBy"]) && key($query["orderBy"]) !== null){
+
+				$sql .= " order by ";
 
 				$orderby_count = count($query["orderBy"]);
-
-				if ($orderby_count > 0)
-						$sql .= " order by ";
-
 				$is_first = true;
 				for ($i=0; $i<$orderby_count; $i++){
 
 					if (!isset($query["orderBy"][$i]["fieldName"]))
-							continue;
+						continue;
 
 					$x = $this->s($query["orderBy"][$i]["fieldName"]);
 
@@ -277,6 +271,8 @@ class MysqlVisualTask extends VisualTaskBase {
 			}
 
 			$sql .= $limit_offset . ", " . $limit_size;
+
+			echo $sql;die();
 
 			if (isset($this->sql_transform_cbs[$query_id]))
 					$this->sql_transform_cbs[$query_id]($sql, $query);
