@@ -1,9 +1,9 @@
 <?php
 
-namespace VisualTask\DB\Mysql;
+namespace VisualTask\DB;
 
 
-class DB implements \VisualTask\DB\VisualTaskDB {
+class MysqlDB implements DB {
 
 	private $qs = array();
 	public $db_connections = array();
@@ -34,7 +34,7 @@ class DB implements \VisualTask\DB\VisualTaskDB {
     
 }
 
-class Queryable implements \VisualTask\DB\VisualTaskQueryable {
+class MysqlQueryable implements Queryable {
 
     private $conn;
 	private $is_fetch_assoc = true;

@@ -3,13 +3,13 @@
 namespace VisualTask\DB;
 
 
-interface VisualTaskDB {
+interface DB {
 
     public function connect($db_conn_name, $is_force_new = false);
 
 }
 
-interface VisualTaskQueryable {
+interface Queryable {
 
     public function get_is_connected();
 

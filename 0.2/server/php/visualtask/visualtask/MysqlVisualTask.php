@@ -1,9 +1,9 @@
 <?php
 
-namespace VisualTask\VisualTask\Mysql;
+namespace VisualTask\VisualTask;
 
 
-class VisualTask extends \VisualTask\VisualTask\VisualTaskBase {
+class MysqlVisualTask extends VisualTaskBase {
 
 	protected $mysql_aggregate_funcs = array(
 		"count" => array("count(",")"),
