@@ -1,7 +1,5 @@
 <?php 
 
-namespace VisualTask;
-
 
 define("VT_DIR", __DIR__ . DIRECTORY_SEPARATOR . "visualtask");
 
