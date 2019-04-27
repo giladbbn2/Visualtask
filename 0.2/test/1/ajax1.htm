@@ -52,7 +52,7 @@
                     var o = JSON.parse(this.responseText);
 
                     document.getElementById("results").innerHTML = JSON.stringify(o.results, undefined, 2);
-                    document.getElementById("sql").innerHTML = JSON.stringify(o.debug.mysql[0]).replace("\"", "");
+                    document.getElementById("sql").innerHTML = JSON.stringify(o.debug.mysql[0]).replace(/"/g, "");
                     
                 } else {
 
