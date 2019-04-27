@@ -47,18 +47,18 @@ abstract class VisualTaskBase {
 		$allowed_entities_by_real_type = array();
 
 		foreach ($this->options["queries"] as $query_id => $query){
-			echo "1";
+
 			if (!isset($query["type"]))
 				continue;
 			
 			$type = $query["type"];
-			echo "2";
+
 			if (!in_array($type, $allowed_types))
 				continue;
-			echo "3";
+
 			if (!isset($this->resource_types[$type]))
 				continue;
-			echo "4";
+
 			$real_type = $this->resource_types[$type];
 			
 			if (!isset($allowed_queries_by_real_type[$real_type]))
@@ -73,7 +73,8 @@ abstract class VisualTaskBase {
 		
 		foreach ($allowed_queries_by_real_type as $real_type => $queries){
 			$method_name = "query_" . $real_type;
-			@$this->$method_name($queries, $allowed_entities_by_real_type[$real_type]);
+			echo $method_name;
+			$this->$method_name($queries, $allowed_entities_by_real_type[$real_type]);
 		}
 		
         return true;
