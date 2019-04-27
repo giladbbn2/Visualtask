@@ -107,7 +107,7 @@ abstract class VisualTaskBase {
 		$this->sql_transform_cbs = &$sql_transform_cbs;
 
 		$this->preset->pre_query($this->options);
-
+		echo "123123123123123";die();
 		$this->query();
 
 		$this->preset->post_query($this->options);
