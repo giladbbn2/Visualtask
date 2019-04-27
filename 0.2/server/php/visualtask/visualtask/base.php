@@ -81,18 +81,18 @@ abstract class VisualTaskBase {
 	}
 
 	public function preset($preset_instance, $options, $sql_transform_cbs = array()){
-
+		echo "1";
 		if ($options === "" || $options === null || !is_subclass_of($preset_instance, "VisualTaskPresetBase"))
 			return false;
-
+		echo "2";
 		if (is_array($options))	// already decoded into an array
 			$this->options = $options;
 		else
 			$this->options = @json_decode($options, true);
-
+		echo "3";
 		if (!isset($this->options["queries"]) || !is_array($this->options["queries"]))
 			return false;
-			
+		echo "4";
 		if (isset($this->options["debug"]) && $this->options["debug"] === true)
 			$this->options["debug"] = array();
 		else
