@@ -35,7 +35,7 @@
                 debug: true
             };
 
-            document.getElementById("queries").innerHTML = JSON.stringify(options);
+            document.getElementById("queries").innerHTML = JSON.stringify(options, undefined, 2);
 
             var xhr = new XMLHttpRequest();
 
