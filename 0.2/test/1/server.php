@@ -6,9 +6,6 @@ ini_set('display_errors', 1);
 // include the vt_autoload_class function to load visualtask files properly
 include dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . "server" . DIRECTORY_SEPARATOR . "php" . DIRECTORY_SEPARATOR . "autoload.php";
 
-// load preset
-include "preset1.php";
-
 // this makes sure all necessary files are loaded properly
 vt_autoload_class("\\VisualTask\\DB\\MysqlDB");
 vt_autoload_class("\\VisualTask\\VisualTask\\MysqlVisualTask");
@@ -37,6 +34,9 @@ $vt->limit_size_default = 10;
 $vt->limit_size_max = 100;
 
 // this file returns ajax to consumers requesting visualtask
+
+// load preset
+include "preset1.php";
 
 $options = $vt->preset(new preset1(), $_POST["options"]);
 
